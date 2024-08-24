@@ -1,0 +1,14 @@
+/*
+* CSS for the CSTL Web Site
+* By Chihaya-Yuka 2024/8/24.
+*/
+body{
+    background-color: white; 
+    color: black; 
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.logo {
+    text-align: center;
+    border: 3px solid green;
+}
