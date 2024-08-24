@@ -5,9 +5,13 @@
 
 #define SET_SIZE 101
 
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
 typedef struct {
-    int *buckets[SET_SIZE];
-    size_t size;
+    Node *buckets[SET_SIZE];
 } Set;
 
 void set_init(Set *s);

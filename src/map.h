@@ -5,9 +5,10 @@
 
 #define MAP_SIZE 101
 
-typedef struct {
+typedef struct MapEntry {
     int key;
     int value;
+    struct MapEntry *next;
 } MapEntry;
 
 typedef struct {
