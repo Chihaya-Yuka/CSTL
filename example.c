@@ -7,6 +7,7 @@
 #include "list.h"
 #include "set.h"
 #include "map.h"
+#include "rb_tree.h"
 
 int int_compare(const void *a, const void *b) {
     int int_a = *(const int *)a;
@@ -72,7 +73,7 @@ int main() {
     vector_free(&v);
 
     // List example
-    Node *head;
+    List_node *head;
     list_init(&head);
     list_append(&head, 5);
     list_append(&head, 15);
@@ -101,6 +102,17 @@ int main() {
         printf("Key 1 not found in map.\n");
     }
     map_free(&m);
+
+    // RB-Tree example
+    RBTree_node tree;
+    rb_tree_init(&tree, 0);
+    rb_tree_insert(&tree, 12);
+    rb_tree_insert(&tree, 42);
+    rb_tree_insert(&tree, 114);
+    rb_tree_insert(&tree, 514);
+    rb_tree_insert(&tree, 15);
+    rb_tree_insert(&tree, 14);
+    rb_tree_insert(&tree, 21);
 
     return 0;
 }
