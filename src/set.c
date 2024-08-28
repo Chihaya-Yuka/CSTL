@@ -11,7 +11,7 @@ void set_init(Set *s) {
 
 void set_insert(Set *s, int value) {
     size_t index = HASH(value);
-    Node *new_node = (Node *)malloc(sizeof(Node));
+    Set_node *new_node = (Set_node *)malloc(sizeof(Set_node));
     new_node->data = value;
     new_node->next = s->buckets[index];
     s->buckets[index] = new_node;
@@ -19,7 +19,7 @@ void set_insert(Set *s, int value) {
 
 int set_contains(const Set *s, int value) {
     size_t index = HASH(value);
-    Node *current = s->buckets[index];
+    Set_node *current = s->buckets[index];
     while (current != NULL) {
         if (current->data == value) {
             return 1; // Value found
@@ -31,8 +31,8 @@ int set_contains(const Set *s, int value) {
 
 void set_remove(Set *s, int value) {
     size_t index = HASH(value);
-    Node *current = s->buckets[index];
-    Node *previous = NULL;
+    Set_node *current = s->buckets[index];
+    Set_node *previous = NULL;
     while (current != NULL) {
         if (current->data == value) {
             if (previous == NULL) {
@@ -50,9 +50,9 @@ void set_remove(Set *s, int value) {
 
 void set_free(Set *s) {
     for (size_t i = 0; i < SET_SIZE; i++) {
-        Node *current = s->buckets[i];
+        Set_node *current = s->buckets[i];
         while (current != NULL) {
-            Node *temp = current;
+            Set_node *temp = current;
             current = current->next;
             free(temp);
         }
