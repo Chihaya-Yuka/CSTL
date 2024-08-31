@@ -1,326 +1,282 @@
-#include <rb_tree.h>
+#include "rb_tree.h"
 #include <stdlib.h>
 
-void rb_tree_init(RBTree_node *root, int key) {
-    root->key = key;
-    root->color = BLACK;
-    root->left = NULL;
-    root->right = NULL;
-    root->parent = NULL;
+static void rb_tree_init_node(RBTree_node *node, int key) {
+    node->key = key;
+    node->color = RED;
+    node->left = NULL;
+    node->right = NULL;
+    node->parent = NULL;
 }
 
-RBTree_node *rb_tree_insert(RBTree_node *root, int key) {
-    RBTree_node *exist = rb_tree_find(root, key);
-    if (exist != NULL) {
-        return exist;
-    }
-    RBTree_node *new_node = (RBTree_node *)malloc(sizeof(RBTree_node));
-    RBTree_node *insert_node = rb_tree_find_(root, key, 1);
-    rb_tree_init(new_node, key);
-    new_node->color = RED;
-    if (key < insert_node->key) {
-        rb_tree_add_as_left(insert_node, new_node);
-    } else {
-        rb_tree_add_as_right(insert_node, new_node);
-    }
-    rb_tree_solve_double_red(new_node);
-    return new_node;
-}
-
-void rb_tree_remove(RBTree_node *root, int key) {
-    RBTree_node *node = rb_tree_find(root, key);
+static RBTree_node *rb_tree_find_(RBTree_node *node, int key) {
     if (node == NULL) {
-        return;
+        return NULL;
     }
-    RBTree_node *node_delete = node;
-    RBTree_node *successor = NULL;
-    if (rb_tree_has_both(node)) {
-        node_delete = node->right;
-        while (rb_tree_has_left(node_delete)) {
-            node_delete = node_delete->left;
-        }
-
-        int tmp = node_delete->key;
-        node_delete->key = node->key;
-        node->key = tmp;
-
-        RBTree_node *parent = node_delete->parent;
-        if (parent == node) {
-            parent->right = node_delete->right;
-        } else {
-            parent->left = node_delete->right;
-        }
-        successor = node_delete->right;
-    } else {
-        if (!rb_tree_has_left(node)) {
-            successor = node->right;
-        } else {
-            successor = node->left;
-        }
-
-        if (rb_tree_is_not_root(node_delete)) {
-            if (rb_tree_is_left(node_delete)) {
-                node_delete->parent->left = successor;
-            } else {
-                node_delete->parent->right = successor;
-            }
-        }
-    }
-    RBTree_node *delete_parent = node_delete->parent;
-    if (successor) {
-        successor->parent = delete_parent;
-    }
-    if (delete_parent == NULL) {
-        root = successor;
-    }
-    int node_delete_is_red = rb_tree_is_red(node_delete);
-    free(node_delete);
-    if (delete_parent == NULL) {
-        if (root != NULL) {
-            root->color = BLACK;
-        }
-        return;
-    }
-    if (node_delete_is_red) {
-        return;
-    }
-    if (successor != NULL && rb_tree_is_red(successor)) {
-        successor->color = BLACK;
-        return;
-    }
-    rb_tree_solve_double_black(successor);
-}
-
-RBTree_node *rb_tree_find(RBTree_node *node, int key) {
-    rb_tree_find_(node, key, 0);
-}
-
-RBTree_node *rb_tree_find_(RBTree_node *node, int key, int return_insert_place) {
     if (node->key == key) {
         return node;
     }
-    if (node->key > key) {
-        return node->left == NULL ? (return_insert_place ? node : NULL)
-            : rb_tree_find(node->left, key);
+    if (key < node->key) {
+        return rb_tree_find_(node->left, key);
     } else {
-        return node->right == NULL ? (return_insert_place ? node : NULL)
-            : rb_tree_find(node->right, key);
+        return rb_tree_find_(node->right, key);
     }
 }
 
-void rb_tree_rotate_left(RBTree_node *node) {
-    RBTree_node *right_child = node->right;
-    RBTree_node *right_left_child = right_child->left;
-
-    node->right = right_left_child;
-    if (rb_tree_has_left(right_child)) {
-        right_left_child->parent = node;
+static void rb_tree_rotate_left(RBTree *tree, RBTree_node *node) {
+    RBTree_node *right = node->right;
+    node->right = right->left;
+    if (right->left != NULL) {
+        right->left->parent = node;
     }
-
-    RBTree_node *parent = node->parent;
-    right_child->left = node;
-    node->parent = right_child;
-
-    if (rb_tree_is_root(node)) {
-        right_child->parent = NULL;
-        return;
-    }
-
-    if (node == parent->left) {
-        parent->left = right_child;
+    right->parent = node->parent;
+    if (node->parent == NULL) {
+        tree->root = right;
+    } else if (node == node->parent->left) {
+        node->parent->left = right;
     } else {
-        parent->right = right_child;
+        node->parent->right = right;
     }
-    right_child->parent = parent;
+    right->left = node;
+    node->parent = right;
 }
 
-void rb_tree_rotate_right(RBTree_node *node) {
-    RBTree_node *left_child = node->left;
-    RBTree_node *left_right_child = left_child->right;
-
-    node->left = left_right_child;
-    if (rb_tree_has_right(left_child)) {
-        left_right_child->parent = node;
+static void rb_tree_rotate_right(RBTree *tree, RBTree_node *node) {
+    RBTree_node *left = node->left;
+    node->left = left->right;
+    if (left->right != NULL) {
+        left->right->parent = node;
     }
-
-    RBTree_node *parent = node->parent;
-    left_child->right = node;
-    node->parent = left_child;
-
-    if (rb_tree_is_root(node)) {
-        left_child->parent = NULL;
-        return;
-    }
-
-    if (node == parent->left) {
-        parent->left = left_child;
+    left->parent = node->parent;
+    if (node->parent == NULL) {
+        tree->root = left;
+    } else if (node == node->parent->right) {
+        node->parent->right = left;
     } else {
-        parent->right = left_child;
+        node->parent->left = left;
     }
-    left_child->parent = parent;
+    left->right = node;
+    node->parent = left;
 }
 
-RBTree_node *rb_tree_adjust(RBTree_node *node) {
-    RBTree_node *parent = node->parent;
-    if (parent == NULL) {
-        return NULL;
-    }
-    RBTree_node *grandparent = parent->parent;
-    if (grandparent == NULL) {
-        return NULL;
-    }
-    RBTree_node *local_root = NULL;
-
-    if (rb_tree_is_left(parent) && rb_tree_is_left(node)) {
-        rb_tree_add_as_left(grandparent, parent->right);
-        rb_tree_add_as_right(parent, grandparent);
-        local_root = parent;
-    } else if (rb_tree_is_right(parent) && rb_tree_is_right(node)) {
-        rb_tree_add_as_right(grandparent, parent->left);
-        rb_tree_add_as_left(parent, grandparent);
-        local_root = parent;
-    } else if (rb_tree_is_left(parent) && rb_tree_is_right(node)) {
-        rb_tree_add_as_right(parent, node->left);
-        rb_tree_add_as_left(grandparent, node->right);
-        rb_tree_add_as_left(node, parent);
-        rb_tree_add_as_right(node, grandparent);
-        local_root = node;
-    } else if (rb_tree_is_right(parent) && rb_tree_is_left(node)) {
-        rb_tree_add_as_left(parent, node->right);
-        rb_tree_add_as_right(grandparent, node->left);
-        rb_tree_add_as_right(node, parent);
-        rb_tree_add_as_left(node, grandparent);
-        local_root = node;
-    }
-    return node;
-}
-
-void rb_tree_solve_double_red(RBTree_node *node) {
-    if (rb_tree_is_root(node)) {
-        node->color = BLACK;
-        return;
-    }
-
-    RBTree_node *parent = node->parent;
-    if (rb_tree_is_black(parent)) {
-        return;
-    }
-
-    RBTree_node *grandparent = parent->parent;
-    if (grandparent == NULL) {
-        return;
-    }
-
-    RBTree_node *uncle =
-        rb_tree_is_left(parent) ? grandparent->right : grandparent->left;
-    if (rb_tree_is_black(uncle)) {
-        if (rb_tree_is_left(parent) && rb_tree_is_left(node)) {
-            parent->color = BLACK;
-        } else {
-            node->color = BLACK;
-        }
-        grandparent->color = RED;
-        RBTree_node *grandgrandparent = grandparent->parent;
-        RBTree_node *sub_root = rb_tree_adjust(node);
-        if (grandgrandparent == NULL) {
-            sub_root->color = BLACK;
-            sub_root->parent = NULL;
-        } else {
-            if (sub_root->key < grandgrandparent->key) {
-                rb_tree_add_as_left(grandgrandparent, sub_root);
+static void rb_tree_insert_fixup(RBTree *tree, RBTree_node *node) {
+    while (node != tree->root && node->parent->color == RED) {
+        if (node->parent == node->parent->parent->left) {
+            RBTree_node *uncle = node->parent->parent->right;
+            if (uncle != NULL && uncle->color == RED) {
+                node->parent->color = BLACK;
+                uncle->color = BLACK;
+                node->parent->parent->color = RED;
+                node = node->parent->parent;
             } else {
-                rb_tree_add_as_right(grandgrandparent, sub_root);
-            }
-        }
-    } else {
-        parent->color = BLACK;
-        uncle->color = BLACK;
-        if (rb_tree_is_not_root(grandparent)) {
-            grandparent->color = RED;
-        }
-        rb_tree_solve_double_red(grandparent);
-    }
-}
-
-void rb_tree_solve_double_black(RBTree_node *node) {
-    RBTree_node *parent = node->parent;
-    if (parent == NULL) {
-        return;
-    }
-    RBTree_node *root = rb_tree_get_root(node);
-    RBTree_node *sibling = rb_tree_is_left(node) ? node->right : node->left;
-    if (rb_tree_is_red(sibling)) {
-        sibling->color = BLACK;
-        parent->color = RED;
-        RBTree_node *grandparent = parent->parent;
-        RBTree_node *local_root = rb_tree_is_left(sibling)
-            ? rb_tree_adjust(sibling->left)
-            : rb_tree_adjust(sibling->right);
-        if (grandparent == NULL) {
-            local_root->color = BLACK;
-            local_root->parent = NULL;
-            root = local_root;
-        } else {
-            if (local_root->key < grandparent->key) {
-                rb_tree_add_as_left(grandparent, local_root);
-            } else {
-                rb_tree_add_as_right(grandparent, local_root);
-            }
-        }
-        rb_tree_solve_double_black(node);
-    } else {
-        RBTree_node *red = rb_tree_has_left(node) && rb_tree_is_red(node->left)
-            ? node->left
-            : (rb_tree_has_right(node) && rb_tree_is_red(node->right)
-                ? node->right
-                : NULL);
-        if(red != NULL){
-            enum rb_color parent_color = parent->color;
-            RBTree_node *grandparent = parent;
-            RBTree_node *local_root = rb_tree_adjust(red);
-            if(grandparent == NULL){
-                local_root->color = BLACK;
-                local_root->parent = NULL;
-                root = local_root;
-            } else {
-                if(local_root->key < grandparent->key){
-                    rb_tree_add_as_left(grandparent, local_root);
-                } else {
-                    rb_tree_add_as_right(grandparent, local_root);
+                if (node == node->parent->right) {
+                    node = node->parent;
+                    rb_tree_rotate_left(tree, node);
                 }
+                node->parent->color = BLACK;
+                node->parent->parent->color = RED;
+                rb_tree_rotate_right(tree, node->parent->parent);
             }
-            local_root->color = parent_color;  // TODO: bugs?
-            local_root->left->color = BLACK;
-            local_root->right->color = BLACK;
         } else {
-            if(rb_tree_is_black(parent)){
-                parent->color = BLACK;
-                node->color = RED;
+            RBTree_node *uncle = node->parent->parent->left;
+            if (uncle != NULL && uncle->color == RED) {
+                node->parent->color = BLACK;
+                uncle->color = BLACK;
+                node->parent->parent->color = RED;
+                node = node->parent->parent;
             } else {
-                node->color = RED;
+                if (node == node->parent->left) {
+                    node = node->parent;
+                    rb_tree_rotate_right(tree, node);
+                }
+                node->parent->color = BLACK;
+                node->parent->parent->color = RED;
+                rb_tree_rotate_left(tree, node->parent->parent);
             }
-            rb_tree_solve_double_black(parent);
         }
     }
+    tree->root->color = BLACK;
 }
 
-void rb_tree_add_as_left(RBTree_node *root, RBTree_node *node) {
-    root->left = node;
-    if (node != NULL) {
-        node->parent = root;
+static void rb_tree_transplant(RBTree *tree, RBTree_node *u, RBTree_node *v) {
+    if (u->parent == NULL) {
+        tree->root = v;
+    } else if (u == u->parent->left) {
+        u->parent->left = v;
+    } else {
+        u->parent->right = v;
+    }
+    if (v != NULL) {
+        v->parent = u->parent;
     }
 }
 
-void rb_tree_add_as_right(RBTree_node *root, RBTree_node *node) {
-    root->right = node;
-    if (node != NULL) {
-        node->parent = root;
-    }
-}
-
-RBTree_node *rb_tree_get_root(RBTree_node *node) {
-    while (node->parent != NULL) {
-        node = node->parent;
+static RBTree_node *rb_tree_minimum(RBTree_node *node) {
+    while (node->left != NULL) {
+        node = node->left;
     }
     return node;
+}
+
+static void rb_tree_delete_fixup(RBTree *tree, RBTree_node *node, RBTree_node *parent) {
+    while (node != tree->root && (node == NULL || node->color == BLACK)) {
+        if (node == parent->left) {
+            RBTree_node *sibling = parent->right;
+            if (sibling->color == RED) {
+                sibling->color = BLACK;
+                parent->color = RED;
+                rb_tree_rotate_left(tree, parent);
+                sibling = parent->right;
+            }
+            if ((sibling->left == NULL || sibling->left->color == BLACK) &&
+                (sibling->right == NULL || sibling->right->color == BLACK)) {
+                sibling->color = RED;
+                node = parent;
+                parent = node->parent;
+            } else {
+                if (sibling->right == NULL || sibling->right->color == BLACK) {
+                    sibling->left->color = BLACK;
+                    sibling->color = RED;
+                    rb_tree_rotate_right(tree, sibling);
+                    sibling = parent->right;
+                }
+                sibling->color = parent->color;
+                parent->color = BLACK;
+                if (sibling->right != NULL) {
+                    sibling->right->color = BLACK;
+                }
+                rb_tree_rotate_left(tree, parent);
+                node = tree->root;
+            }
+        } else {
+            RBTree_node *sibling = parent->left;
+            if (sibling->color == RED) {
+                sibling->color = BLACK;
+                parent->color = RED;
+                rb_tree_rotate_right(tree, parent);
+                sibling = parent->left;
+            }
+            if ((sibling->right == NULL || sibling->right->color == BLACK) &&
+                (sibling->left == NULL || sibling->left->color == BLACK)) {
+                sibling->color = RED;
+                node = parent;
+                parent = node->parent;
+            } else {
+                if (sibling->left == NULL || sibling->left->color == BLACK) {
+                    sibling->right->color = BLACK;
+                    sibling->color = RED;
+                    rb_tree_rotate_left(tree, sibling);
+                    sibling = parent->left;
+                }
+                sibling->color = parent->color;
+                parent->color = BLACK;
+                if (sibling->left != NULL) {
+                    sibling->left->color = BLACK;
+                }
+                rb_tree_rotate_right(tree, parent);
+                node = tree->root;
+            }
+        }
+    }
+    if (node != NULL) {
+        node->color = BLACK;
+    }
+}
+
+void rb_tree_init(RBTree *tree) {
+    tree->root = NULL;
+}
+
+RBTree_node *rb_tree_insert(RBTree *tree, int key) {
+    RBTree_node *node = malloc(sizeof(RBTree_node));
+    if (node == NULL) {
+        return NULL;
+    }
+    rb_tree_init_node(node, key);
+
+    RBTree_node *y = NULL;
+    RBTree_node *x = tree->root;
+
+    while (x != NULL) {
+        y = x;
+        if (key < x->key) {
+            x = x->left;
+        } else if (key > x->key) {
+            x = x->right;
+        } else {
+            free(node);
+            return x;  // Key already exists
+        }
+    }
+
+    node->parent = y;
+    if (y == NULL) {
+        tree->root = node;
+    } else if (key < y->key) {
+        y->left = node;
+    } else {
+        y->right = node;
+    }
+
+    rb_tree_insert_fixup(tree, node);
+    return node;
+}
+
+void rb_tree_remove(RBTree *tree, int key) {
+    RBTree_node *node = rb_tree_find(tree, key);
+    if (node == NULL) {
+        return;
+    }
+
+    RBTree_node *y = node;
+    RBTree_node *x;
+    rb_color y_original_color = y->color;
+
+    if (node->left == NULL) {
+        x = node->right;
+        rb_tree_transplant(tree, node, node->right);
+    } else if (node->right == NULL) {
+        x = node->left;
+        rb_tree_transplant(tree, node, node->left);
+    } else {
+        y = rb_tree_minimum(node->right);
+        y_original_color = y->color;
+        x = y->right;
+        if (y->parent == node) {
+            if (x != NULL) {
+                x->parent = y;
+            }
+        } else {
+            rb_tree_transplant(tree, y, y->right);
+            y->right = node->right;
+            y->right->parent = y;
+        }
+        rb_tree_transplant(tree, node, y);
+        y->left = node->left;
+        y->left->parent = y;
+        y->color = node->color;
+    }
+
+    free(node);
+
+    if (y_original_color == BLACK) {
+        rb_tree_delete_fixup(tree, x, (x == NULL) ? y->parent : x->parent);
+    }
+}
+
+RBTree_node *rb_tree_find(RBTree *tree, int key) {
+    return rb_tree_find_(tree->root, key);
+}
+
+static void rb_tree_destroy_recursive(RBTree_node *node) {
+    if (node != NULL) {
+        rb_tree_destroy_recursive(node->left);
+        rb_tree_destroy_recursive(node->right);
+        free(node);
+    }
+}
+
+void rb_tree_destroy(RBTree *tree) {
+    rb_tree_destroy_recursive(tree->root);
+    tree->root = NULL;
 }
