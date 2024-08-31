@@ -3,8 +3,9 @@ name: Deploy CSTL web site to Github Pages
 on:
   push:
     branches: ["main"]
-
-  workflow_dispatch:
+    paths:
+      - 'web/**'  # Triggered only when the files in the web folder change
+  workflow_dispatch: 
 
 permissions:
   contents: read
