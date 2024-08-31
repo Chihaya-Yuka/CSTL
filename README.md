@@ -4,9 +4,7 @@
   
   ![CSTL Logo](/.github/logo.png)
 
-  ![GitHub](https://img.shields.io/github/license/Chihaya-Yuka/CSTL)
-
-  [![Website](https://img.shields.io/badge/Website-online-brightgreen)](https://cstl.awaland.xyz/)
+  ![GitHub](https://img.shields.io/github/license/Chihaya-Yuka/CSTL) [![Website](https://img.shields.io/badge/Website-online-brightgreen)](https://cstl.awaland.xyz/)
   
 </div>
 
