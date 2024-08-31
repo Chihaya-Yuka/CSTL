@@ -1,6 +1,14 @@
 # CSTL - Standard Template Library for C ⭐
 
-![CSTL Logo](/.github/logo.png)
+<div align="center">
+  
+  ![CSTL Logo](/.github/logo.png)
+
+  ![GitHub](https://img.shields.io/github/license/Chihaya-Yuka/CSTL)
+
+  [![Website](https://img.shields.io/badge/Website-online-brightgreen)](https://cstl.awaland.xyz/)
+  
+</div>
 
 **CSTL** is a standard template library for the C programming language, designed to provide a more modern programming experience for C language embedded developers. With CSTL, you can use common data structures and algorithms to improve the efficiency and readability of your C code.
 
