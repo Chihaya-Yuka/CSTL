@@ -1,19 +1,19 @@
 #include "list.h"
 #include <stdlib.h>
 
-void list_init(Node **head) {
+void list_init(List_node **head) {
     *head = NULL;
 }
 
-void list_append(Node **head, int data) {
-    Node *new_node = (Node *)malloc(sizeof(Node));
+void list_append(List_node **head, int data) {
+    List_node *new_node = (List_node *)malloc(sizeof(List_node));
     new_node->data = data;
     new_node->next = NULL;
 
     if (*head == NULL) {
         *head = new_node;
     } else {
-        Node *temp = *head;
+        List_node *temp = *head;
         while (temp->next != NULL) {
             temp = temp->next;
         }
@@ -21,8 +21,8 @@ void list_append(Node **head, int data) {
     }
 }
 
-void list_free(Node *head) {
-    Node *temp;
+void list_free(List_node *head) {
+    List_node *temp;
     while (head != NULL) {
         temp = head;
         head = head->next;
@@ -30,9 +30,9 @@ void list_free(Node *head) {
     }
 }
 
-size_t list_size(const Node *head) {
+size_t list_size(const List_node *head) {
     size_t size = 0;
-    const Node *temp = head;
+    const List_node *temp = head;
     while (temp != NULL) {
         size++;
         temp = temp->next;
