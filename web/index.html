@@ -3,28 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/less" href="css/cstl.less">
-    <script src="js/less.js"" ></script>
-    <script src="js/commit.js"></script>
     <title>CSTL - STL For C</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Less CSS -->
+    <link rel="stylesheet" type="text/less" href="css/cstl.less">
+    <script src="js/less.js"></script>
+    <script src="js/commit.js"></script>
 </head>
 <body>
-    <p class="logo">CSTL - C++ STL For C</p>
-    <div id="abstract">
-        <p>
-            CSTL is a standard template library for the C language, designed to provide a more modern programming experience for embedded C developers.
-            For example, with CSTL, you can use common data structures and algorithms to improve the efficiency and code readability of C development.
-        </p>
-        <p>
-            CSTL is an open source project, if you have any suggestions or problems in the use of the process, 
-            welcome to feedback through <a href="https://github.com/Chihaya-Yuka/CSTL/issues">Issues</a>.
-        </p>
+    <!-- Navigation -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">CSTL - C++ STL For C</a>
+        </div>
+    </nav>
+
+    <!-- Abstract Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <p class="lead">
+                    CSTL is a standard template library for the C language, designed to provide a more modern programming experience for embedded C developers.
+                </p>
+                <p class="text-muted">
+                    With CSTL, you can use common data structures and algorithms to improve the efficiency and code readability of C development.
+                </p>
+                <p class="text-muted">
+                    CSTL is an open-source project. If you have any suggestions or encounter issues while using it, please provide feedback through the 
+                    <a href="https://github.com/Chihaya-Yuka/CSTL/issues" class="text-decoration-underline">GitHub Issues</a> page.
+                </p>
+            </div>
+        </div>
     </div>
-    <h2>News</h2>
-    <div id="news"></div>
-    <h2>Download</h2>
-    <div id="download">
-        CSTL is an open source project, you can visit <a href="https://github.com/Chihaya-Yuka/CSTL">https://github.com/Chihaya-Yuka/CSTL</a> to get it.
+
+    <!-- News Section -->
+    <div class="container mt-5">
+        <h2>News</h2>
+        <div id="news" class="p-3 bg-light border rounded">
+            <!-- News content will be inserted here -->
+        </div>
     </div>
+
+    <!-- Download Section -->
+    <div class="container mt-5">
+        <h2>Download</h2>
+        <div id="download" class="p-3 bg-light border rounded">
+            <p>
+                CSTL is an open-source project. You can visit the GitHub repository at 
+                <a href="https://github.com/Chihaya-Yuka/CSTL" class="btn btn-primary" target="_blank">Download CSTL</a>.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>&copy; 2024 CSTL - C++ STL For C. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS (Optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
