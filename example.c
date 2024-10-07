@@ -127,5 +127,24 @@ int main() {
         printf("Did not find 14 in tree after removal.\n");
     }
 
+    // Time example
+    time_t current_time = get_current_timestamp();
+    printf("Current timestamp: %ld\n", current_time);
+
+    long long current_time_ms = get_current_timestamp_ms();
+    printf("Current timestamp (ms): %lld\n", current_time_ms);
+
+    char* formatted_time = format_time("%Y-%m-%d %H:%M:%S", current_time);
+    printf("Formatted time: %s\n", formatted_time);
+    free(formatted_time);
+
+    printf("Sleeping for 2 seconds...\n");
+    sleep_seconds(2);
+    printf("It's MyGO!!!!!\n");
+
+    printf("Sleeping for 500 milliseconds...\n");
+    sleep_milliseconds(500);
+    printf("It's MyGO!!!!!!\n");
+
     return 0;
 }
