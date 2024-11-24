@@ -4,7 +4,8 @@
   
   ![CSTL Logo](/.github/logo.png)
 
-  ![GitHub](https://img.shields.io/github/license/Chihaya-Yuka/CSTL) [![Website](https://img.shields.io/badge/Website-online-brightgreen)](https://cstl.awaland.xyz/)
+  ![GitHub](https://img.shields.io/github/license/Chihaya-Yuka/CSTL) [![Website](https://img.shields.io/badge/Website-online-brightgreen)](https://cstl.awaland.xyz/) [![Issues](https://img.shields.io/github/issues/Chihaya-Yuka/CSTL?color=16a34a&label=Issues&style=flat-square)](https://github.com/Chihaya-Yuka/CSTL/issues) [![Contributors](https://img.shields.io/github/contributors/Chihaya-Yuka/CSTL?color=16a34a&label=Contributors&style=flat-square)](https://github.com/Chihaya-Yuka/CSTL/graphs/contributors) [![Commit Activity](https://img.shields.io/github/commit-activity/m/Chihaya-Yuka/CSTL?color=16a34a&label=Commit%20Activity&style=flat-square)](https://github.com/Chihaya-Yuka/CSTL/graphs/commit-activity)
+
   
 </div>
 
