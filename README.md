@@ -142,7 +142,37 @@ int main() {
         printf("Key 1 not found in map.\n");
     }
     map_free(&m);
-    printf("It's MyGO!!!!!");
+
+    Generator gen = create_range(1, 5);
+    int value;
+    while ((value = gen.next(gen.state)) != -1) {
+        print("Generated: %d\n", value);
+    }
+
+    FlatMap map;
+    flat_map_init(&map, 10);
+    flat_map_insert(&map, 1, 100);
+    print("FlatMap key 1: %d\n", flat_map_get(&map, 1));
+    flat_map_free(&map);
+
+    FlatSet set;
+    flat_set_init(&set, 10);
+    flat_set_insert(&set, 42);
+    print("FlatSet contains 42: %d\n", flat_set_contains(&set, 42));
+    flat_set_free(&set);
+
+    Mdspan md;
+    mdspan_init(&md, 2, 3);
+    mdspan_set(&md, 1, 2, 99);
+    print("Mdspan (1,2): %d\n", mdspan_get(&md, 1, 2));
+    mdspan_free(&md);
+
+    Expected e = expected_success(42);
+    if (e.has_value) {
+        print("Expected value: %d\n", e.value);
+    }
+
+    printf("BanG Dream, It's MyGO!!!!!");
     return 0;
 }
 ```
