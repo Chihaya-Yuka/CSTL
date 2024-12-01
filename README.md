@@ -36,3 +36,7 @@ CSTL is an open-source project. If you have any suggestions or encounter issues 
 - **Generic Interfaces**: All data structures and algorithms are implemented with generic interfaces, supporting generic programming.
 
 - **Simple and Easy to Use**: API design similar to C++ STL, making it easy for C developers to get started.
+
+## Example
+
+Look at `example.c` to get the example.
