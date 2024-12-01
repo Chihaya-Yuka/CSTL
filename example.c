@@ -4,9 +4,7 @@ int int_compare(const void *a, const void *b) {
     return (int_a > int_b) - (int_a < int_b);
 }
 
-int is_even(const void *item, void *context) {
-    return (*(const int *)item) % 2 == 0;
-}
+
 
 void *sum(void *accumulator, const void *item, void *context) {
     *(int *)accumulator += *(const int *)item;
@@ -23,7 +21,9 @@ int main() {
     printf("minstd_rand0: %u\n", minstd_rand0_generate(&minstd0_rng));
 
     lcg_t minstd_rng;
-    minstd_rand_init(&minstd_rng, 42);
+    minstd_rand_init(&mint is_even(const void *item, void *context) {
+    return (*(const int *)item) % 2 == 0;
+}instd_rng, 42);
     printf("minstd_rand: %u\n", minstd_rand_generate(&minstd_rng));
 
     swc_t swc_rng;

@@ -2,6 +2,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const apiUrl = 'https://api.github.com/repos/Chihaya-Yuka/CSTL/commits';
     const newsContainer = document.getElementById('news');
 
+    /**
+     * Fetches the latest commit from the GitHub repository and updates the news container.
+     * 
+     * This function makes an API call to GitHub, retrieves the most recent commit,
+     * and displays its details in the news container on the webpage.
+     * 
+     * @async
+     * @function fetchLatestCommit
+     * @throws {Error} Throws an error if the network response is not ok or if there's an issue fetching the commits.
+     * @returns {Promise<void>} A promise that resolves when the news container has been updated with the latest commit information.
+     */
     async function fetchLatestCommit() {
         try {
             const response = await fetch(apiUrl);
