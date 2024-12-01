@@ -1,14 +1,3 @@
-#include <stdio.h>
-#include "max_min.h"
-#include "filter.h"
-#include "reduce.h"
-#include "random_generator.h"
-#include "vector.h"
-#include "list.h"
-#include "set.h"
-#include "map.h"
-#include "rb_tree.h"
-
 int int_compare(const void *a, const void *b) {
     int int_a = *(const int *)a;
     int int_b = *(const int *)b;
@@ -73,7 +62,7 @@ int main() {
     vector_free(&v);
 
     // List example
-    List_node *head;
+    Node *head;
     list_init(&head);
     list_append(&head, 5);
     list_append(&head, 15);
@@ -103,48 +92,35 @@ int main() {
     }
     map_free(&m);
 
-    // RB-Tree example
-    RBTree_node tree;
-    rb_tree_init(&tree, 0);
-    rb_tree_insert(&tree, 12);
-    rb_tree_insert(&tree, 42);
-    rb_tree_insert(&tree, 114);
-    rb_tree_insert(&tree, 514);
-    rb_tree_insert(&tree, 15);
-    rb_tree_insert(&tree, 14);
-    rb_tree_insert(&tree, 21);
-    if(rb_tree_find(&tree, 42)) {
-        printf("Found 42 in tree.\n");
-    }
-    if(!rb_tree_find(&tree, 100)) {
-        printf("Did not find 100 in tree.\n");
-    }
-    if(rb_tree_find(&tree, 14)) {
-        printf("Found 14 in tree.\n");
-    }
-    rb_tree_remove(&tree, 14);
-    if(!rb_tree_find(&tree, 14)) {
-        printf("Did not find 14 in tree after removal.\n");
+    Generator gen = create_range(1, 5);
+    int value;
+    while ((value = gen.next(gen.state)) != -1) {
+        print("Generated: %d\n", value);
     }
 
-    // Time example
-    time_t current_time = get_current_timestamp();
-    printf("Current timestamp: %ld\n", current_time);
+    FlatMap map;
+    flat_map_init(&map, 10);
+    flat_map_insert(&map, 1, 100);
+    print("FlatMap key 1: %d\n", flat_map_get(&map, 1));
+    flat_map_free(&map);
 
-    long long current_time_ms = get_current_timestamp_ms();
-    printf("Current timestamp (ms): %lld\n", current_time_ms);
+    FlatSet set;
+    flat_set_init(&set, 10);
+    flat_set_insert(&set, 42);
+    print("FlatSet contains 42: %d\n", flat_set_contains(&set, 42));
+    flat_set_free(&set);
 
-    char* formatted_time = format_time("%Y-%m-%d %H:%M:%S", current_time);
-    printf("Formatted time: %s\n", formatted_time);
-    free(formatted_time);
+    Mdspan md;
+    mdspan_init(&md, 2, 3);
+    mdspan_set(&md, 1, 2, 99);
+    print("Mdspan (1,2): %d\n", mdspan_get(&md, 1, 2));
+    mdspan_free(&md);
 
-    printf("Sleeping for 2 seconds...\n");
-    sleep_seconds(2);
-    printf("It's MyGO!!!!!\n");
+    Expected e = expected_success(42);
+    if (e.has_value) {
+        print("Expected value: %d\n", e.value);
+    }
 
-    printf("Sleeping for 500 milliseconds...\n");
-    sleep_milliseconds(500);
-    printf("It's MyGO!!!!!!\n");
-
+    printf("BanG Dream, It's MyGO!!!!!");
     return 0;
 }
