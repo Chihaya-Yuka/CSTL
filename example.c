@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "template.h"
 #include "expected.h"
 #include "mdspan.h"
 #include "flat_set.h"
@@ -14,6 +15,7 @@
 #include "vector.h"
 #include "list.h"
 #include "rb_tree.h"
+#include "print.h"
 
 int int_compare(const void *a, const void *b) {
     int int_a = *(const int *)a;
@@ -177,6 +179,8 @@ int main() {
     Array_float_destroy(float_array);
     List_int_destroy(int_list);
 
-    printf("BanG Dream, It's MyGO!!!!!");
+    // Print example
+    char* band = "MyGO!!!!!";
+    print("BanG Dream, It's {}", band);
     return 0;
 }
