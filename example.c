@@ -162,6 +162,21 @@ int main() {
 
     RBTree_free(&tree);
 
+    // Template example
+    Array_int* int_array = Array_int_create(10);
+    Array_int_push(int_array, 1);
+    Array_int_push(int_array, 2);
+    Array_int_push(int_array, 3);
+    Array_float* float_array = Array_float_create(10);
+    Array_float_push(float_array, 1.1f);
+    Array_float_push(float_array, 2.2f);
+    List_int* int_list = List_int_create();
+    List_int_push_front(int_list, 1);
+    List_int_push_front(int_list, 2);
+    Array_int_destroy(int_array);
+    Array_float_destroy(float_array);
+    List_int_destroy(int_list);
+
     printf("BanG Dream, It's MyGO!!!!!");
     return 0;
 }
