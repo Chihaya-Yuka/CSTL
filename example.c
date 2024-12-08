@@ -1,3 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "expected.h"
+#include "mdspan.h"
+#include "flat_set.h"
+#include "flat_map.h"
+#include "generator.h"
+#include "map.h"
+#include "set.h"
+#include "random_generator.h"
+#include "max_min.h"
+#include "filter.h"
+#include "reduce.h"
+#include "vector.h"
+#include "list.h"
+
 int int_compare(const void *a, const void *b) {
     int int_a = *(const int *)a;
     int int_b = *(const int *)b;
@@ -11,6 +27,10 @@ void *sum(void *accumulator, const void *item, void *context) {
     return accumulator;
 }
 
+int is_even(const void *item, void *context) {
+    return (*(const int *)item) % 2 == 0;
+}
+
 int main() {
     mt19937_t mt_rng;
     mt19937_init(&mt_rng, 42);
@@ -21,9 +41,7 @@ int main() {
     printf("minstd_rand0: %u\n", minstd_rand0_generate(&minstd0_rng));
 
     lcg_t minstd_rng;
-    minstd_rand_init(&mint is_even(const void *item, void *context) {
-    return (*(const int *)item) % 2 == 0;
-}instd_rng, 42);
+    minstd_rand_init(&minstd_rng, 42);
     printf("minstd_rand: %u\n", minstd_rand_generate(&minstd_rng));
 
     swc_t swc_rng;
@@ -62,7 +80,7 @@ int main() {
     vector_free(&v);
 
     // List example
-    Node *head;
+    List_node *head;
     list_init(&head);
     list_append(&head, 5);
     list_append(&head, 15);
@@ -93,32 +111,32 @@ int main() {
     map_free(&m);
 
     Generator gen = create_range(1, 5);
-    int value;
+    value = 0;
     while ((value = gen.next(gen.state)) != -1) {
-        print("Generated: %d\n", value);
+        printf("Generated: %d\n", value);
     }
 
     FlatMap map;
     flat_map_init(&map, 10);
     flat_map_insert(&map, 1, 100);
-    print("FlatMap key 1: %d\n", flat_map_get(&map, 1));
+    printf("FlatMap key 1: %d\n", flat_map_get(&map, 1));
     flat_map_free(&map);
 
     FlatSet set;
     flat_set_init(&set, 10);
     flat_set_insert(&set, 42);
-    print("FlatSet contains 42: %d\n", flat_set_contains(&set, 42));
+    printf("FlatSet contains 42: %d\n", flat_set_contains(&set, 42));
     flat_set_free(&set);
 
     Mdspan md;
     mdspan_init(&md, 2, 3);
     mdspan_set(&md, 1, 2, 99);
-    print("Mdspan (1,2): %d\n", mdspan_get(&md, 1, 2));
+    printf("Mdspan (1,2): %d\n", mdspan_get(&md, 1, 2));
     mdspan_free(&md);
 
     Expected e = expected_success(42);
     if (e.has_value) {
-        print("Expected value: %d\n", e.value);
+        printf("Expected value: %d\n", e.value);
     }
 
     printf("BanG Dream, It's MyGO!!!!!");
