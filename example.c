@@ -13,6 +13,7 @@
 #include "reduce.h"
 #include "vector.h"
 #include "list.h"
+#include "rb_tree.h"
 
 int int_compare(const void *a, const void *b) {
     int int_a = *(const int *)a;
@@ -138,6 +139,28 @@ int main() {
     if (e.has_value) {
         printf("Expected value: %d\n", e.value);
     }
+
+    // RB Tree example
+    RBTree tree;
+    RBTree_init(&tree);
+    RBTree_insert(&tree, 42);
+    printf("RBTree contains 42: %d\n", RBTree_contains(&tree, 42));
+    RBTree_insert(&tree, 100);
+    RBTree_insert(&tree, 20);
+    RBTree_insert(&tree, 75);
+    RBTree_insert(&tree, 150);
+    printf("RBTree contains 20: %d\n", RBTree_contains(&tree, 20));
+    printf("RBTree contains 75: %d\n", RBTree_contains(&tree, 75));
+    RBTree_delete(&tree, 42);
+    printf("RBTree contains 42 after deletion: %d\n", RBTree_contains(&tree, 42));
+    printf("RBTree contains 100: %d\n", RBTree_contains(&tree, 100));
+    RBTree_delete(&tree, 75);
+    printf("RBTree contains 75 after deletion: %d\n", RBTree_contains(&tree, 75));
+    RBTree_delete(&tree, 20);
+    printf("RBTree contains 20 after deletion: %d\n", RBTree_contains(&tree, 20));
+    printf("RBTree contains 150: %d\n", RBTree_contains(&tree, 150));
+
+    RBTree_free(&tree);
 
     printf("BanG Dream, It's MyGO!!!!!");
     return 0;
