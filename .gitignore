@@ -51,6 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# VSCode
+# VSCode and other IDE
 
 .vscode/
+.idea/
+cmake-build-debug/
