@@ -5,7 +5,7 @@
 If you discover a vulnerability in CSTL, we encourage you to report it to us as soon as possible to ensure it can be addressed promptly. Here’s how to report a vulnerability:
 
 1. **Where to Report**: 
-   - Please report vulnerabilities by emailing [security@cstl-project.org](mailto:security@cstl-project.org).
+   - Please report vulnerabilities by emailing [me@yuka.living](mailto:me@yuka.living).
    - Include a detailed description of the vulnerability, including the affected versions, how to reproduce the issue, and any potential impact.
 
 2. **Response Time**:
