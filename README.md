@@ -1,5 +1,8 @@
 # CSTL - Standard Template Library for C ⭐
 
+> [!TIP]
+> Do you know the informatics Olympian "pinkrabbit"? We encourage you to join his fan base. QQ744648573
+
 <div align="center">
   
   ![CSTL Logo](/.github/logo.png)
